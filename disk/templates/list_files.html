@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Яндекс.Диск Просмотр файлов</title>
+</head>
+
+<body>
+    <h1>Файлы на Яндекс.Диске</h1>
+
+    <form method="get" action="">
+        <label for="public_key">Введите публичную ссылку:</label>
+        <input type="text" id="public_key" name="public_key" value="{{ public_key|default:'' }}">
+        <button type="submit">Показать файлы</button>
+    </form>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% else %}
+    {% if current_path %}
+        <p><a href="?public_key={{ public_key }}&path={{ parent_path }}">⬅ Назад</a></p>
+{% endif %}
+
+<ul>
+    {% for file in files %}
+    <li>
+        {% if file.type == "dir" %}
+        📁 <a href="?public_key={{ public_key }}&path={{ file.path }}">{{ file.name }}</a>
+        {% else %}
+        📄 {{ file.name }} - <a href="{{ file.file }}" download>Скачать</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+</body>
+
+</html>
+
