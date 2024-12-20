@@ -6,12 +6,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Яндекс.Диск Просмотр файлов</title>
+    <title>Яндекс Диск Просмотр файлов</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
-    <h1>Файлы на Яндекс.Диске</h1>
+    <h1>Файлы на Яндекс Диске</h1>
 
     <form method="get" action="">
         <label for="public_key">Введите публичную ссылку:</label>
@@ -31,16 +31,17 @@
         <div class="file-item">
             {% if file.type == "dir" %}
             <p>📁</p>
-            <a href="?public_key={{ public_key }}&path={{ file.path }}">{{ file.name }}</a>
-            <p><a href="?public_key={{ public_key }}&path={{ file.path }}&download_zip=true">Скачать как архив</a></p>
+                <form method="post" action="{% url 'download_folder_as_zip' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="public_key" value="{{ public_key }}">
+                    <input type="hidden" name="folder_path" value="{{ file.path }}">
+                    <a href="?public_key={{ public_key }}&path={{ file.path }}">{{ file.name }}</a>
+                    <p><button>Скачать как ZIP</button></p>
+                </form>
             {% else %}
-            {% if file.preview_url %}
-            <div>
-                <img src="{{ file.preview_url }}" alt="Preview">
-            </div>
-            {% endif %}
-            <p>📄 {{ file.name }}</p>
-            <p><a href="{{ file.file }}" download>Скачать</a></p>
+                <img src="{{ file.preview }}" alt="{{ file.name }}">
+                <p>📄 {{ file.name }}</p>
+                <p><a href="{{ file.file }}" download>Скачать</a></p>
             {% endif %}
         </div>
         {% endfor %}

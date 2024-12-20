@@ -39,7 +39,7 @@ def list_files(request):
     else:
         return render(request, 'list_files.html', {'error': 'Не удалось получить список файлов.'})
 
-# Функция для загрузки файла с Яндекс.Диска
+# Функция для загрузки папок с Яндекс.Диска
 @csrf_exempt
 def download_file(request):
     if request.method == 'POST':
@@ -61,3 +61,32 @@ def download_file(request):
     return HttpResponse('Метод не поддерживается.', status=405)
 
 
+@csrf_exempt
+def download_folder_as_zip(request):
+    if request.method == 'POST':
+        public_key = request.POST.get('public_key')
+        folder_path = request.POST.get('folder_path')
+
+        if not public_key or not folder_path:
+            return HttpResponse('Некорректный запрос.', status=400)
+
+        url = 'https://cloud-api.yandex.net/v1/disk/public/resources/download'
+        params = {'public_key': public_key, 'path': folder_path}
+        response = requests.get(url, params=params)
+
+        if response.status_code == 200:
+            download_link = response.json().get('href')
+            if download_link:
+                archive_response = requests.get(download_link, stream=True)
+                if archive_response.status_code == 200:
+                    response_content = HttpResponse(archive_response.content, content_type='application/zip')
+                    response_content['Content-Disposition'] = f'attachment; filename="{folder_path.split("/")[-1]}.zip"'
+                    return response_content
+                else:
+                    return HttpResponse('Не удалось скачать архив.', status=500)
+            else:
+                return HttpResponse('Ссылка для скачивания не найдена.', status=500)
+        else:
+            return HttpResponse('Не удалось создать ссылку на архив.', status=500)
+
+    return HttpResponse('Метод не поддерживается.', status=405)
