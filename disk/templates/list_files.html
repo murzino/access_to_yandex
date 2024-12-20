@@ -20,17 +20,18 @@
     </form>
 
     {% if error %}
-    <p style="color: red;">{{ error }}</p>
+        <p style="color: red;">{{ error }}</p>
     {% else %}
-    {% if current_path %}
-    <p><a href="?public_key={{ public_key }}&path={{ parent_path }}">⬅ Назад</a></p>
+        {% if current_path %}
+        <p><a href="?public_key={{ public_key }}&path={{ parent_path }}">⬅ Назад</a></p>
     {% endif %}
 
+    
     <div class="file-container">
         {% for file in files %}
         <div class="file-item">
             {% if file.type == "dir" %}
-            <p>📁</p>
+            <p style="font-size: 90px;">📁</p>
                 <form method="post" action="{% url 'download_folder_as_zip' %}">
                     {% csrf_token %}
                     <input type="hidden" name="public_key" value="{{ public_key }}">
@@ -39,9 +40,8 @@
                     <p><button>Скачать как ZIP</button></p>
                 </form>
             {% else %}
-                <img src="{{ file.preview }}" alt="{{ file.name }}">
-                <p>📄 {{ file.name }}</p>
-                <p><a href="{{ file.file }}" download>Скачать</a></p>
+            <img src="{{ file.preview }}" alt="Preview"> <p> {{ file.name }}</p>
+            <p><a href="{{ file.file }}" download>Скачать</a></p>
             {% endif %}
         </div>
         {% endfor %}
