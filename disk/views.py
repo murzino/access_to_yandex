@@ -34,6 +34,7 @@ def list_files(request):
             'current_path': path,
             'parent_path': parent_path if path else None, 
         }
+
         return render(request, 'list_files.html', context)
     else:
         return render(request, 'list_files.html', {'error': 'Не удалось получить список файлов.'})
@@ -58,3 +59,5 @@ def download_file(request):
             return HttpResponse('Не удалось скачать файл.', status=500)
 
     return HttpResponse('Метод не поддерживается.', status=405)
+
+

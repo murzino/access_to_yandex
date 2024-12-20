@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Яндекс.Диск Просмотр файлов</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
@@ -15,26 +18,34 @@
         <input type="text" id="public_key" name="public_key" value="{{ public_key|default:'' }}">
         <button type="submit">Показать файлы</button>
     </form>
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% else %}
-    {% if current_path %}
-        <p><a href="?public_key={{ public_key }}&path={{ parent_path }}">⬅ Назад</a></p>
-{% endif %}
 
-<ul>
-    {% for file in files %}
-    <li>
-        {% if file.type == "dir" %}
-        📁 <a href="?public_key={{ public_key }}&path={{ file.path }}">{{ file.name }}</a>
-        {% else %}
-        📄 {{ file.name }} - <a href="{{ file.file }}" download>Скачать</a>
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% else %}
+    {% if current_path %}
+    <p><a href="?public_key={{ public_key }}&path={{ parent_path }}">⬅ Назад</a></p>
+    {% endif %}
+
+    <div class="file-container">
+        {% for file in files %}
+        <div class="file-item">
+            {% if file.type == "dir" %}
+            <p>📁</p>
+            <a href="?public_key={{ public_key }}&path={{ file.path }}">{{ file.name }}</a>
+            <p><a href="?public_key={{ public_key }}&path={{ file.path }}&download_zip=true">Скачать как архив</a></p>
+            {% else %}
+            {% if file.preview_url %}
+            <div>
+                <img src="{{ file.preview_url }}" alt="Preview">
+            </div>
+            {% endif %}
+            <p>📄 {{ file.name }}</p>
+            <p><a href="{{ file.file }}" download>Скачать</a></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 
 </html>
-
