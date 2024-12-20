@@ -1,0 +1,49 @@
+
+
+/* Стили для контейнера плитки */
+.file-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;  
+    padding: 20px;
+}
+
+/* Стили для каждого элемента в плитке */
+.file-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.file-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для превью */
+.file-item img {
+    max-width: 100%;
+    max-height: 100px;
+    border-radius: 8px;
+}
+
+.file-item p {
+    margin: 10px 0;
+}
+
+.file-item a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.file-item a:hover {
+    background-color: #45a049;
+}
